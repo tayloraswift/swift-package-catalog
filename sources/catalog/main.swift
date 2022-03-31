@@ -61,7 +61,7 @@ struct Main:CommandPlugin
         """
         [
             {
-                "package": "", 
+                "package": "\(context.package.id)", 
                 "modules": [\(modules.map { "\"\($0)\"" }.joined(separator: ", "))],
                 "include": [\(include.map { "\"\($0)\"" }.joined(separator: ", "))]
             }

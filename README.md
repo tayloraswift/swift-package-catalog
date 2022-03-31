@@ -6,7 +6,7 @@
 
 `catalog` is a simple but powerful Swift Package Plugin for generating symbolgraphs and detecting DocC documentation resources in a project.
 
-It’s like `swift-docc-plugin`, but it doesn’t actually build the documentation, it only generates or locates the resources required to build the documentation. This gives you all the power of the SPM’s symbolgraph and project scanning capabilities while still preserving the flexibility to use a documentation engine of your choice to document your project!
+It’s like `swift-docc-plugin`, but it doesn’t actually build the documentation, it only generates and locates the resources required to build the documentation. This gives you all the power of the SPM’s symbolgraph and project scanning capabilities while still preserving the flexibility to use a documentation engine of your choice to document your project!
 
 ## getting started
 
