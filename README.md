@@ -35,7 +35,7 @@ Building for debugging...
 Build complete! (0.07s)
 [
     {
-        "package": "", 
+        "package": "swift-json", 
         "modules": ["JSONExamples", "JSONBenchmarks", "JSON"],
         "include": 
         [
@@ -58,7 +58,7 @@ Building for debugging...
 Build complete! (0.07s)
 [
     {
-        "package": "", 
+        "package": "swift-json", 
         "modules": ["JSON"],
         "include": 
         [
