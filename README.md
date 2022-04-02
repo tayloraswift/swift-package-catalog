@@ -1,6 +1,6 @@
 <div align="center">
   
-***`documentation-extract`***<br>`0.1.0`
+***`documentation-extract`***<br>`0.1.1`
 
 </div>
 
