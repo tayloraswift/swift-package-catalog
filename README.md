@@ -1,6 +1,6 @@
 <div align="center">
   
-***`documentation-extract`***<br>`0.1.1`
+***`documentation-extract`***<br>`0.2.0`
 
 </div>
 
@@ -16,7 +16,7 @@ It’s like `swift-docc-plugin`, but it doesn’t actually build the documentati
 let package:Package = .init(name: "example", products: [],
     dependencies: 
     [
-        .package(url: "https://github.com/swift-biome/swift-documentation-extract", from: "0.1.0"),
+        .package(url: "https://github.com/swift-biome/swift-documentation-extract", from: "0.2.0"),
     ],
     targets: [])
 ```
@@ -35,14 +35,50 @@ Building for debugging...
 Build complete! (0.07s)
 [
     {
-        "package": "swift-json", 
-        "modules": ["JSONExamples", "JSONBenchmarks", "JSON"],
-        "include": 
+        "catalog_tools_version": 2,
+        "package": "swift-grammar", 
+        "modules": 
         [
-            ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSONExamples", 
-            ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSONBenchmarks", 
-            "sources/documentation.docc", 
-            ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSON"
+            {
+                "module": "Grammar",
+                "dependencies": [],
+                "include": 
+                [
+                    ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-grammar/Grammar"
+                ]
+            }
+        ]
+    }, 
+    {
+        "catalog_tools_version": 2,
+        "package": "swift-json", 
+        "modules": 
+        [
+            {
+                "module": "JSON",
+                "dependencies": [{"package": "swift-grammar", "modules": ["Grammar"]}],
+                "include": 
+                [
+                    ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSON", 
+                    "sources/json.docc"
+                ]
+            }, 
+            {
+                "module": "JSONExamples",
+                "dependencies": [{"package": "swift-json", "modules": ["JSON"]}],
+                "include": 
+                [
+                    ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSONExamples"
+                ]
+            }, 
+            {
+                "module": "JSONBenchmarks",
+                "dependencies": [{"package": "swift-json", "modules": ["JSON"]}],
+                "include": 
+                [
+                    ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSONBenchmarks"
+                ]
+            }
         ]
     }
 ]
@@ -53,17 +89,24 @@ Build complete! (0.07s)
 You can filter the modules `catalog` scans by passing them as positional arguments. The order does not matter.
 
 ```
-$ swift package catalog JSON
+$ swift package catalog JSON 
 Building for debugging...
 Build complete! (0.07s)
 [
     {
+        "catalog_tools_version": 2,
         "package": "swift-json", 
-        "modules": ["JSON"],
-        "include": 
+        "modules": 
         [
-            "sources/documentation.docc", 
-            ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSON"
+            {
+                "module": "JSON",
+                "dependencies": [{"package": "swift-grammar", "modules": ["Grammar"]}],
+                "include": 
+                [
+                    "/home/klossy/dev/swift-json/.build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSON", 
+                    "/home/klossy/dev/swift-json/sources/json.docc"
+                ]
+            }
         ]
     }
 ]
@@ -75,3 +118,5 @@ Target filtering is case-sensitive.
 $ swift package catalog json
 error: target 'json' is not a swift source module in this package
 ```
+
+Note that multiple modules with the same name can occur in a dependency tree, as long as colliding modules are never combined into the same product. This means that the number of modules cataloged by this tool may be greater than the number of arguments passed to its invocation.
