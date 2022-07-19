@@ -119,6 +119,7 @@ extension Target
             
             case .target(let target as SwiftSourceModuleTarget):
                 dependencies[target.id] = .init(target: target, product: product)
+                target.gather(dependencies: &dependencies, product: product)
                 
             case .target(_):
                 break
