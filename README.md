@@ -1,12 +1,14 @@
 <div align="center">
   
-***`documentation-extract`***<br>`0.2.0`
+***`package-catalog`***<br>`0.2.1`
 
 </div>
 
 `catalog` is a simple but powerful Swift Package Plugin for generating symbolgraphs and detecting DocC documentation resources in a project.
 
 It’s like `swift-docc-plugin`, but it doesn’t actually build the documentation, it only generates and locates the resources required to build the documentation. This gives you all the power of the SPM’s symbolgraph and project scanning capabilities while still preserving the flexibility to use a documentation engine of your choice to document your project!
+
+`catalog` emits its output as JSON with a fairly straightforward format. Its output is designed to be easily transformed by downstream tooling that relocates, compresses, or otherwise post-processes the resource files the catalogs reference.
 
 ## getting started
 
@@ -16,7 +18,7 @@ It’s like `swift-docc-plugin`, but it doesn’t actually build the documentati
 let package:Package = .init(name: "example", products: [],
     dependencies: 
     [
-        .package(url: "https://github.com/swift-biome/swift-documentation-extract", from: "0.2.0"),
+        .package(url: "https://github.com/kelvin13/swift-package-catalog", from: "0.2.1"),
     ],
     targets: [])
 ```
