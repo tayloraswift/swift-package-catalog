@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package:Package = .init(
-    name: "swift-documentation-extract",
+    name: "swift-package-catalog",
     products: 
     [
         .plugin(name: "catalog", targets: ["Catalog"]),
