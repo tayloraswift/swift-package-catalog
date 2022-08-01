@@ -15,7 +15,6 @@ let package:Package = .init(
         .plugin(name: "Catalog",
             capability: .command(intent: .custom(verb: "catalog", description: "extract symbolgraphs and documentation")),
             dependencies: [],
-            path: "sources/catalog",
             exclude: []),
     ]
 )
