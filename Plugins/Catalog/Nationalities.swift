@@ -32,9 +32,11 @@ struct Nationalities
         }
         for product:any Product in package.products
         {
-            guard case nil = self.table.updateValue(package.id, forKey: product.id)
-            else 
+            switch self.table.updateValue(package.id, forKey: product.id)
             {
+            case nil, package.id?:
+                break 
+            case _?:
                 fatalError("duplicate products named '\(product.id)'")
             }
         }
