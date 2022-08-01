@@ -51,7 +51,7 @@ Build complete! (0.07s)
                     ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-grammar/Grammar"
                 ]
             }
-        ]
+        ],
         "snippets": 
         [
         ]
@@ -70,7 +70,7 @@ Build complete! (0.07s)
                     "Sources/JSON/JSON.docc"
                 ]
             }
-        ]
+        ],
         "snippets": 
         [
             {
@@ -138,7 +138,7 @@ Build complete! (0.07s)
                     "sources/json.docc"
                 ]
             }
-        ]
+        ],
         "snippets": 
         [
             ...
