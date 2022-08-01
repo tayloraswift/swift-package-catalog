@@ -42,12 +42,12 @@ struct Nationalities
         }
     }
 
-    func dependencies<SomeTarget>(of target:SomeTarget) -> [Package.ID: [SomeTarget]]
+    func dependencies<SomeTarget>(of module:Module<SomeTarget>) -> [Package.ID: [SomeTarget]]
         where SomeTarget:Target 
     {
         var dependencies:[Package.ID: [SomeTarget]] = [:]
         var seen:Set<Target.ID> = []
-        self.walkDependencies(of: target)
+        self.walkDependencies(of: .init(module.target, in: module.package))
         {
             // package.origin is always set to .root, and never contains 
             // useful version information.
@@ -60,7 +60,7 @@ struct Nationalities
         return dependencies
     }
 
-    func walk(_ target:any Target, _ body:(Module<any Target>) throws -> ()) rethrows 
+    func walk(_ target:any Target, _ body:(Module<any Target>) throws -> ()) rethrows
     {
         try self.walk(.init(target, in: self.local), body)
     }
@@ -69,15 +69,9 @@ struct Nationalities
         try body(module)
         try self.walkDependencies(of: module, body)
     }
-    func walkDependencies(of target:any Target, _ body:(Module<any Target>) throws -> ())
-        rethrows
-    {
-        try self.walkDependencies(of: .init(target, in: self.local), body)
-    }
     func walkDependencies(of module:Module<any Target>, _ body:(Module<any Target>) throws -> ())
         rethrows
     {
-        // let package:Package.ID = package ?? self.local 
         for dependency:TargetDependency in module.target.dependencies 
         {
             switch dependency 

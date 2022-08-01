@@ -82,7 +82,7 @@ struct Main:CommandPlugin
             }
             
             packages[module.package, default: .init()].append(target: module.target, 
-                dependencies: nationalities.dependencies(of: module.target), 
+                dependencies: nationalities.dependencies(of: module), 
                 include: include)
         }
         #if swift(>=5.7)
@@ -100,7 +100,7 @@ struct Main:CommandPlugin
                 }
             }
             packages[snippet.package, default: .init()].append(snippet: snippet.target, 
-                dependencies: nationalities.dependencies(of: snippet.target), 
+                dependencies: nationalities.dependencies(of: snippet), 
                 sources: sources)
         }
         #endif
