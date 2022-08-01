@@ -115,7 +115,7 @@ struct Main:CommandPlugin
                     "package": "\($0.key)", 
                     "modules": 
                     [\($0.value.modules.joined(separator: ", "))
-                    ]
+                    ],
                     "snippets": 
                     [\($0.value.snippets.joined(separator: ", "))
                     ]
