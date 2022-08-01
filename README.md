@@ -1,14 +1,14 @@
 <div align="center">
   
-***`package-catalog`***<br>`0.2.1`
+***`package-catalog`***<br>`0.3.0`
 
 </div>
 
-`catalog` is a simple but powerful Swift Package Plugin for generating symbolgraphs and detecting DocC documentation resources in a project.
+`catalog` is a simple but powerful Swift Package Plugin for generating symbolgraphs, collecting snippets, and detecting DocC documentation resources in a project.
 
-It’s like `swift-docc-plugin`, but it doesn’t actually build the documentation, it only generates and locates the resources required to build the documentation. This gives you all the power of the SPM’s symbolgraph and project scanning capabilities while still preserving the flexibility to use a documentation engine of your choice to document your project!
+It’s like `swift-docc-plugin`, but it doesn’t actually build the documentation, it only generates and locates the resources required to build the documentation using the Swift Package Manager’s symbolgraph and project scanning capabilities.
 
-`catalog` emits its output as JSON with a fairly straightforward format. Its output is designed to be easily transformed by downstream tooling that relocates, compresses, or otherwise post-processes the resource files the catalogs reference.
+`catalog` emits documentation metadata as JSON with a fairly straightforward format. Its output is designed to be easily transformed by downstream tooling that consumer, relocates, compresses, or otherwise post-processes this metadata.
 
 ## getting started
 
@@ -18,7 +18,7 @@ It’s like `swift-docc-plugin`, but it doesn’t actually build the documentati
 let package:Package = .init(name: "example", products: [],
     dependencies: 
     [
-        .package(url: "https://github.com/kelvin13/swift-package-catalog", from: "0.2.1"),
+        .package(url: "https://github.com/kelvin13/swift-package-catalog", from: "0.3.0"),
     ],
     targets: [])
 ```
@@ -28,16 +28,14 @@ let package:Package = .init(name: "example", products: [],
 Running `catalog` with `swift package` will output all the documentation resources it managed to find, in JSON format. Behind the scenes, it will direct the SPM to generate the relevant symbolgraphs.
 
 ```
-$ swift package catalog 
+$ swift package catalog
 Building for debugging...
-Build complete! (0.07s)
-Building for debugging...
-Build complete! (0.07s)
+Build complete! (0.08s)
 Building for debugging...
 Build complete! (0.07s)
 [
     {
-        "catalog_tools_version": 2,
+        "catalog_tools_version": 3,
         "package": "swift-grammar", 
         "modules": 
         [
@@ -50,9 +48,12 @@ Build complete! (0.07s)
                 ]
             }
         ]
+        "snippets": 
+        [
+        ]
     }, 
     {
-        "catalog_tools_version": 2,
+        "catalog_tools_version": 3,
         "package": "swift-json", 
         "modules": 
         [
@@ -62,28 +63,52 @@ Build complete! (0.07s)
                 "include": 
                 [
                     ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSON", 
-                    "sources/json.docc"
+                    "Sources/JSON/JSON.docc"
+                ]
+            }
+        ]
+        "snippets": 
+        [
+            {
+                "snippet": "LintingDictionary",
+                "dependencies": 
+                [
+                    {
+                        "package": "swift-grammar", 
+                        "modules": ["Grammar"]
+                    }, 
+                    {
+                        "package": "swift-json", 
+                        "modules": ["JSON"]
+                    }
+                ],
+                "sources": 
+                [
+                    "Snippets/LintingDictionary.swift"
                 ]
             }, 
             {
-                "module": "JSONExamples",
-                "dependencies": [{"package": "swift-json", "modules": ["JSON"]}],
-                "include": 
+                "snippet": "BasicDecoding",
+                "dependencies": 
                 [
-                    ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSONExamples"
-                ]
-            }, 
-            {
-                "module": "JSONBenchmarks",
-                "dependencies": [{"package": "swift-json", "modules": ["JSON"]}],
-                "include": 
+                    {
+                        "package": "swift-grammar", 
+                        "modules": ["Grammar"]
+                    }, 
+                    {
+                        "package": "swift-json", 
+                        "modules": ["JSON"]
+                    }
+                ],
+                "sources": 
                 [
-                    ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSONBenchmarks"
+                    "Snippets/BasicDecoding.swift"
                 ]
             }
         ]
     }
 ]
+
 ```
 
 > Note: Relative paths are shown for demonstration purposes. The `catalog` plugin actually emits absolute paths.
@@ -96,7 +121,7 @@ Building for debugging...
 Build complete! (0.07s)
 [
     {
-        "catalog_tools_version": 2,
+        "catalog_tools_version": 3,
         "package": "swift-json", 
         "modules": 
         [
@@ -105,14 +130,20 @@ Build complete! (0.07s)
                 "dependencies": [{"package": "swift-grammar", "modules": ["Grammar"]}],
                 "include": 
                 [
-                    "/home/klossy/dev/swift-json/.build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSON", 
-                    "/home/klossy/dev/swift-json/sources/json.docc"
+                    ".build/x86_64-unknown-linux-gnu/extracted-symbols/swift-json/JSON", 
+                    "sources/json.docc"
                 ]
             }
+        ]
+        "snippets": 
+        [
+            ...
         ]
     }
 ]
 ```
+
+Snippets are not bound to any module, and will therefore always appear.
 
 Target filtering is case-sensitive. 
 
