@@ -1,5 +1,6 @@
 import PackagePlugin
 
+public 
 struct Module<TargetType>
 {
     let target:TargetType
@@ -14,17 +15,18 @@ struct Module<TargetType>
 
 extension Module:Identifiable, Equatable, Comparable where TargetType:Target 
 {
-    static 
+    public static 
     func == (lhs:Self, rhs:Self) -> Bool 
     {
         lhs.target.id == rhs.target.id
     }
-    static 
+    public static 
     func < (lhs:Self, rhs:Self) -> Bool 
     {
         lhs.target.id < rhs.target.id
     }
     
+    public 
     var id:Target.ID 
     {
         self.target.id
