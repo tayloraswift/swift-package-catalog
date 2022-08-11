@@ -27,7 +27,7 @@ as of v0.4.0, `swift-package-catalog` contains two tools:
 let package:Package = .init(name: "example", products: [],
     dependencies: 
     [
-        .package(url: "https://github.com/kelvin13/swift-package-catalog", from: "0.3.0"),
+        .package(url: "https://github.com/kelvin13/swift-package-catalog", from: "0.4.0"),
     ],
     targets: [])
 ```
