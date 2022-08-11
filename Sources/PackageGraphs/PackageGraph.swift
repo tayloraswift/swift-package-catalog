@@ -1,6 +1,7 @@
 import PackagePlugin
 
-struct Nationalities 
+public 
+struct PackageGraph 
 {
     private 
     let local:Package.ID 
@@ -12,12 +13,14 @@ struct Nationalities
         self.local = local 
         self.table = [:]
     }
+
+    public
     init(_ package:Package) 
     {
         self.init(local: package.id)
         self.update(with: package)
     }
-
+    public
     subscript(product:Product.ID) -> Package.ID 
     {
         self.table[product] ?? self.local 
@@ -42,6 +45,7 @@ struct Nationalities
         }
     }
 
+    public
     func dependencies<SomeTarget>(of module:Module<SomeTarget>) -> [Package.ID: [SomeTarget]]
         where SomeTarget:Target 
     {
@@ -60,10 +64,12 @@ struct Nationalities
         return dependencies
     }
 
+    public
     func walk(_ target:any Target, _ body:(Module<any Target>) throws -> ()) rethrows
     {
         try self.walk(.init(target, in: self.local), body)
     }
+    public
     func walk(_ module:Module<any Target>, _ body:(Module<any Target>) throws -> ()) rethrows
     {
         try body(module)

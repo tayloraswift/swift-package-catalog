@@ -1,6 +1,6 @@
 <div align="center">
   
-***`package-catalog`***<br>`0.3.0`
+***`package-catalog`***<br>`0.4.0`
 
 [![swift package index versions](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fkelvin13%2Fswift-package-catalog%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/kelvin13/swift-package-catalog)
 [![swift package index platforms](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fkelvin13%2Fswift-package-catalog%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/kelvin13/swift-package-catalog)
@@ -14,6 +14,11 @@ It’s like `swift-docc-plugin`, but it doesn’t actually build the documentati
 
 `catalog` emits documentation metadata as JSON with a fairly straightforward format. Its output is designed to be easily transformed by downstream tooling that consumer, relocates, compresses, or otherwise post-processes this metadata.
 
+as of v0.4.0, `swift-package-catalog` contains two tools:
+
+1. `blame`
+2. `catalog`
+
 ## getting started
 
 `catalog` is a normal Swift Package Plugin, and you can use it (like any other plugin) by adding it to your `Package.swift` dependency list:
@@ -25,6 +30,26 @@ let package:Package = .init(name: "example", products: [],
         .package(url: "https://github.com/kelvin13/swift-package-catalog", from: "0.3.0"),
     ],
     targets: [])
+```
+
+## running `blame`
+
+`blame` can be used to discover the direct consumers of a dependency. To use `blame`, pass it a list of target names:
+
+```bash 
+$ swift package blame Atomics NIOCore
+```
+```text
+direct consumers of Atomics:
+0. NIOEmbedded (in 'swift-nio')
+1. NIOPosix (in 'swift-nio')
+
+direct consumers of NIOCore:
+0. NIO (in 'swift-nio')
+1. NIOEmbedded (in 'swift-nio')
+2. NIOPosix (in 'swift-nio')
+3. NIOSSL (in 'swift-nio-ssl')
+4. NIOTLS (in 'swift-nio')
 ```
 
 ## running `catalog`

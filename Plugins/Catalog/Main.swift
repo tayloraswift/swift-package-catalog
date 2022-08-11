@@ -1,29 +1,12 @@
 import PackagePlugin
 
-enum CatalogError:Error 
-{
-    case missingTarget(String)
-}
-extension CatalogError:CustomStringConvertible
-{
-    var description:String 
-    {
-        switch self 
-        {
-        case .missingTarget(let target): 
-            return "target '\(target)' is not a swift source module in this package"
-        }
-    }
-}
-
 @main 
 struct Main:CommandPlugin
 {
     func performCommand(context:PluginContext, arguments:[String]) throws 
     {
         // determine which products belong to which packages 
-        let nationalities:Nationalities = .init(context.package)
-
+        let graph:PackageGraph = .init(context.package)
         let arguments:Set<String>? = arguments.isEmpty ? nil : .init(arguments)
         #if swift(>=5.7)
         var snippets:[Module<SwiftSourceModuleTarget>] = []
@@ -32,7 +15,7 @@ struct Main:CommandPlugin
         var seen:Set<Target.ID> = []
         for target:any Target in context.package.targets 
         {
-            nationalities.walk(target)
+            graph.walk(target)
             {
                 guard   let target:SwiftSourceModuleTarget = $0.target as? SwiftSourceModuleTarget, 
                         case nil = seen.update(with: $0.target.id)
@@ -58,7 +41,7 @@ struct Main:CommandPlugin
         
         if let missing:String = arguments?.subtracting(modules.lazy.map(\.target.name)).first 
         {
-            throw CatalogError.missingTarget(missing)
+            throw MissingTargetError.init(name: missing)
         }
         
         let options:PackageManager.SymbolGraphOptions = .init(
@@ -82,7 +65,7 @@ struct Main:CommandPlugin
             }
             
             packages[module.package, default: .init()].append(target: module.target, 
-                dependencies: nationalities.dependencies(of: module), 
+                dependencies: graph.dependencies(of: module), 
                 include: include)
         }
         #if swift(>=5.7)
@@ -100,7 +83,7 @@ struct Main:CommandPlugin
                 }
             }
             packages[snippet.package, default: .init()].append(snippet: snippet.target, 
-                dependencies: nationalities.dependencies(of: snippet), 
+                dependencies: graph.dependencies(of: snippet), 
                 sources: sources)
         }
         #endif

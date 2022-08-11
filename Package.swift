@@ -5,6 +5,8 @@ let package:Package = .init(
     name: "swift-package-catalog",
     products: 
     [
+        // .library(name: "PackageGraphs", targets: ["PackageGraphs"]),
+        .plugin(name: "blame", targets: ["Blame"]),
         .plugin(name: "catalog", targets: ["Catalog"]),
     ],
     dependencies: 
@@ -12,9 +14,21 @@ let package:Package = .init(
     ],
     targets: 
     [
+        // .target(name: "PackageGraphs", dependencies: 
+        // [
+        // ]),
+        
+        .plugin(name: "Blame",
+            capability: .command(intent: .custom(verb: "blame", description: "list consumers of a dependency")),
+            dependencies: 
+            [
+                // .target(name: "PackageGraphs")
+            ]),
         .plugin(name: "Catalog",
             capability: .command(intent: .custom(verb: "catalog", description: "extract symbolgraphs and documentation")),
-            dependencies: [],
-            exclude: []),
+            dependencies: 
+            [
+                //.target(name: "PackageGraphs")
+            ]),
     ]
 )
